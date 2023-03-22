@@ -1,25 +1,28 @@
 package com.mini.livetvapp;
 
-import static android.content.Intent.getIntent;
+import static android.media.tv.TvInputInfo.TYPE_COMPONENT;
 
+import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
+import android.database.Cursor;
+import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.MutableInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.media.tv.TvInputManager;
-
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.tvprovider.media.tv.TvContractCompat;
 
 import com.mini.livetvapp.databinding.FragmentFirstBinding;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,15 +31,19 @@ import java.util.Map;
 
 public class FirstFragment extends Fragment {
 
+    private Context mContext;
+
     private FragmentFirstBinding binding;
 
 //    private Context mContext;
     private TvInputManager mTvInputManager;
 
+    private ContentResolver cr;
+
     private List<TvInputInfo> mInputs = new ArrayList<>();;
 //    private final Map<String, Integer> mInputStateMap = new HashMap<>();
 
-//    private final TvInputManager delegate;
+//    private ChannelData mData = new ChannelData();
 
     @Override
     public View onCreateView(
@@ -44,28 +51,239 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        Log.d("test for check point", "just after onCreateView");
-
-        mTvInputManager = (TvInputManager) getContext().getSystemService(Context.TV_INPUT_SERVICE);
-        Log.d("test for check point", "just after creating mTvInputManager");
+        mContext = getContext();
+        mTvInputManager = (TvInputManager) mContext.getSystemService(Context.TV_INPUT_SERVICE);
 
         initInputList();
-        Log.d("test for check point", "just after initInputList");
 
-        for (TvInputInfo i : mInputs) {
-            Log.d("test for TvInputInfos", i.toString());
-        }
+//        String[] projection =  {
+//                TvContract.Channels._ID,
+//                TvContract.Channels.COLUMN_DISPLAY_NUMBER
+//        };
+
+//        ContentResolver cr = new ContentResolver();
+//        Iterator<TvInputInfo> it = mInputs.iterator();
+
+//        while(it.hasNext()) {
+            TvInputInfo aux = mInputs.get(0);
+            Uri uri = TvContract.buildChannelsUriForInput(aux.getId());
+
+            Map<Long, ChannelInfo> mChannels = new HashMap<>();
+
+            String[] projections = new String[ChannelInfo.PROJECTION.length + 1];
+            projections[0] = TvContract.Channels._ID;
+
+            System.arraycopy(ChannelInfo.PROJECTION, 0, projections, 1, ChannelInfo.PROJECTION.length);
+//            Log.d("TAG : projections length", String.valueOf(projections.length));
+//            Log.d("TAG : _ID", projections[0]);
+//            Log.d("TAG : COLUMN_DISPLAY_NUMBER", projections[1].toString());
+//            Log.d("TAG : COLUMN_DISPLAY_NAME", projections[2]);
+//            Log.d("TAG : COLUMN_ORIGINAL_NETWORK_ID", String.valueOf(projections[3]));
+
+            ContentResolver cr = mContext.getContentResolver();
+
+//        String[] projection = {TvContract.Channels._ID, TvContract.Channels.COLUMN_ORIGINAL_NETWORK_ID};
+
+            try (Cursor cursor =
+                         cr.query(uri, projections,null, null, null)
+            ) {
+                if (cursor != null) {
+//                    cursor.moveToPosition(0);
+                    Log.d("TAG", "cursor is NOT null");
+                    Log.d("TAG for columns", String.valueOf(cursor.getColumnCount() ));
+                    Log.d("TAG for rows", String.valueOf(cursor.getCount() ));
+//                    Log.d("TAG for rows", cursor.getString(1) );
+//                    Log.d("TAG", String.valueOf(cursor.getPosition() ));
+//                    cursor.moveToPosition(0);
+                    Log.d("TAG", String.valueOf(cursor.getPosition() ));
+                    Log.d("TAG", cursor.getColumnName(0));
+                    Log.d("TAG", String.valueOf(cursor.isLast()));
+//                    Log.d("TAG", String.valueOf(cursor.moveToNext()));
+                    while (cursor.moveToNext()) {
+                        Log.d("TAG", "cursor moves to next");
+                        mChannels.put(cursor.getLong(0), ChannelInfo.fromCursor(cursor));
+                        Log.d("TAG", String.valueOf(mChannels.size()));
+                    }
+                }
+            }
+//        Log.d("TAG", String.valueOf(map.size()));
+
+//
+//            Cursor cur = mContext.getContentResolver().query(uri, projections, null, null, null);
+//            Log.d("TAG", cur.toString());
+//
+//            if(cur.moveToFirst()) {
+//                Log.d("TAG", "not empty cursors");
+//            }
+
+//        }
+
+
+
+//        for (TvInputInfo i : mInputs) {
+//            Log.d("test for TvInputInfos", i.toString());
+//
+//            Uri uri = TvContract.buildChannelsUriForInput(i.getId());
+//            Log.d("test for TvInputInfos", uri.toString());
+//
+//            int channelCount = 0;
+//
+//
+////            String[] projections = new String[ChannelInfo.PROJECTION.length + 1];
+//
+////            Log.d("test for check point", B?oolean.toString());
+//ss
+//
+//        }
+
+        UnmodifiableChannelData mData = new UnmodifiableChannelData();
+//        Log.d("test for channel", mData.toString());
+//        Log.d("test for channel", mData.channels.toString());
+
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
+
+    }
+
+
+    public static final class ChannelInfo {
+
+        public static final String[] PROJECTION = {
+                TvContract.Channels.COLUMN_DISPLAY_NUMBER,
+                TvContract.Channels.COLUMN_DISPLAY_NAME,
+                TvContract.Channels.COLUMN_ORIGINAL_NETWORK_ID,
+        };
+
+
+        public final String number;
+        public final String name;
+        public final String logoUrl;
+        public final int originalNetworkId;
+//        public final int videoWidth;
+//        public final int videoHeight;
+//        public final float videoPixelAspectRatio;
+//        public final int audioChannel;
+//        public final int audioLanguageCount;
+//        public final boolean hasClosedCaption;
+//        public final ProgramInfo program;
+//        public final String appLinkText;
+//        public final int appLinkColor;
+//        public final String appLinkIconUri;
+//        public final String appLinkPosterArtUri;
+//        public final String appLinkIntentUri;
+
+        public static ChannelInfo fromCursor(Cursor c) {
+            // TODO: Fill other fields.
+            Builder builder = new Builder();
+            int index = c.getColumnIndex(TvContract.Channels.COLUMN_DISPLAY_NUMBER);
+            if (index >= 0) {
+                builder.setNumber(c.getString(index));
+            }
+            index = c.getColumnIndex(TvContract.Channels.COLUMN_DISPLAY_NAME);
+            if (index >= 0) {
+                builder.setName(c.getString(index));
+            }
+            index = c.getColumnIndex(TvContract.Channels.COLUMN_ORIGINAL_NETWORK_ID);
+            if (index >= 0) {
+                builder.setOriginalNetworkId(c.getInt(index));
+            }
+            return builder.build();
+        }
+
+        private ChannelInfo(
+                String number,
+                String name,
+                String logoUrl,
+                int originalNetworkId
+//                int videoWidth,
+//                int videoHeight,
+//                float videoPixelAspectRatio,
+//                int audioChannel,
+//                int audioLanguageCount,
+//                boolean hasClosedCaption,
+//                ProgramInfo program,
+//                String appLinkText,
+//                int appLinkColor,
+//                String appLinkIconUri,
+//                String appLinkPosterArtUri,
+//                String appLinkIntentUri
+        ) {
+            this.number = number;
+            this.name = name;
+            this.logoUrl = logoUrl;
+            this.originalNetworkId = originalNetworkId;
+//            this.videoWidth = videoWidth;
+//            this.videoHeight = videoHeight;
+//            this.videoPixelAspectRatio = videoPixelAspectRatio;
+//            this.audioChannel = audioChannel;
+//            this.audioLanguageCount = audioLanguageCount;
+//            this.hasClosedCaption = hasClosedCaption;
+//            this.program = program;
+//            this.appLinkText = appLinkText;
+//            this.appLinkColor = appLinkColor;
+//            this.appLinkIconUri = appLinkIconUri;
+//            this.appLinkPosterArtUri = appLinkPosterArtUri;
+//            this.appLinkIntentUri = appLinkIntentUri;
+        }
+
+    }
+
+
+    public static class Builder {
+        private String mNumber;
+        private String mName;
+        private String mLogoUrl = null;
+        private int mOriginalNetworkId;
+
+        public Builder() {}
+
+        public Builder setName(String name) {
+            mName = name;
+            return this;
+        }
+
+        public Builder setNumber(String number) {
+            mNumber = number;
+            return this;
+        }
+
+        public Builder setLogoUrl(String logoUrl) {
+            mLogoUrl = logoUrl;
+            return this;
+        }
+
+        public Builder setOriginalNetworkId(int originalNetworkId) {
+            mOriginalNetworkId = originalNetworkId;
+            return this;
+        }
+
+        public ChannelInfo build() {
+            return new ChannelInfo(
+                    mNumber,
+                    mName,
+                    mLogoUrl,
+                    mOriginalNetworkId
+//                    mVideoWidth,
+//                    mVideoHeight,
+//                    mVideoPixelAspectRatio,
+//                    mAudioChannel,
+//                    mAudioLanguageCount,
+//                    mHasClosedCaption,
+//                    mProgram,
+//                    mAppLinkText,
+//                    mAppLinkColor,
+//                    mAppLinkIconUri,
+//                    mAppLinkPosterArtUri,
+//                    mAppLinkIntentUri
+            );
+        }
 
     }
 
     private void initInputList() {
 
         mInputs.clear();
-        Log.d("test in initInputMaps", String.valueOf(mTvInputManager.getTvInputList().size()));
         for (TvInputInfo input : mTvInputManager.getTvInputList()) {
 
             String inputId = input.getId();
@@ -78,13 +296,13 @@ public class FirstFragment extends Fragment {
 //            Log.d("test for parentId", input.getParentId());
             Log.d("test for type", String.valueOf(input.getType()));
             Log.d("test for tunerCount", String.valueOf(input.getTunerCount()));
+            Log.d("test for type_component", String.valueOf(TYPE_COMPONENT));
 
             mInputs.add(input);
         }
     }
 
-    publ
-    ic void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 //        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
@@ -102,4 +320,81 @@ public class FirstFragment extends Fragment {
         binding = null;
     }
 
+    private class ChannelWrapper {
+//        final Set<ChannelListener> mChannelListeners = new ArraySet<>();
+        final Channel mChannel;
+        boolean mBrowsableInDb;
+        boolean mLockedInDb;
+        boolean mInputRemoved;
+
+        ChannelWrapper(Channel channel) {
+            mChannel = channel;
+//            mBrowsableInDb = channel.isBrowsable();
+//            mLockedInDb = channel.isLocked();
+//            mInputRemoved = !mInputManager.hasTvInputInfo(channel.getInputId());
+        }
+
+//        void addListener(ChannelListener listener) {
+//            mChannelListeners.add(listener);
+//        }
+//
+//        void removeListener(ChannelListener listener) {
+//            mChannelListeners.remove(listener);
+//        }
+//
+//        void notifyChannelUpdated() {
+//            for (ChannelListener l : mChannelListeners) {
+//                l.onChannelUpdated(mChannel);
+//            }
+//        }
+//
+//        void notifyChannelRemoved() {
+//            for (ChannelListener l : mChannelListeners) {
+//                l.onChannelRemoved(mChannel);
+//            }
+//        }
+    }
+
+    private static class ChannelData {
+        final Map<Long, ChannelWrapper> channelWrapperMap;
+        final Map<String, MutableInt> channelCountMap;
+        final List<Channel> channels;
+
+        ChannelData() {
+            channelWrapperMap = new HashMap<>();
+            channelCountMap = new HashMap<>();
+            channels = new ArrayList<>();
+        }
+
+        ChannelData(ChannelData data) {
+            channelWrapperMap = new HashMap<>(data.channelWrapperMap);
+            channelCountMap = new HashMap<>(data.channelCountMap);
+            channels = new ArrayList<>(data.channels);
+        }
+
+        ChannelData(
+                Map<Long, ChannelWrapper> channelWrapperMap,
+                Map<String, MutableInt> channelCountMap,
+                List<Channel> channels) {
+            this.channelWrapperMap = channelWrapperMap;
+            this.channelCountMap = channelCountMap;
+            this.channels = channels;
+        }
+    }
+
+    private static class UnmodifiableChannelData extends ChannelData {
+        UnmodifiableChannelData() {
+            super(
+                    Collections.unmodifiableMap(new HashMap<>()),
+                    Collections.unmodifiableMap(new HashMap<>()),
+                    Collections.unmodifiableList(new ArrayList<>()));
+        }
+
+        UnmodifiableChannelData(ChannelData data) {
+            super(
+                    Collections.unmodifiableMap(data.channelWrapperMap),
+                    Collections.unmodifiableMap(data.channelCountMap),
+                    Collections.unmodifiableList(data.channels));
+        }
+    }
 }
