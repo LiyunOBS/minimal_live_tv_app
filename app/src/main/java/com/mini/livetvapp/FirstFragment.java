@@ -5,6 +5,7 @@ import static android.media.tv.TvInputInfo.TYPE_COMPONENT;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
+import androidx.tvprovider.media.tv.Program;
 import androidx.tvprovider.media.tv.TvContractCompat;
 
 import com.mini.livetvapp.databinding.FragmentFirstBinding;
@@ -37,6 +39,8 @@ import java.util.Map;
 import androidx.core.app.ActivityCompat;
 
 public class FirstFragment extends Fragment {
+
+    private static final String TAG = "TAG for Test";
 
     private Context mContext;
 
@@ -52,6 +56,7 @@ public class FirstFragment extends Fragment {
 
 //    private ChannelData mData = new ChannelData();
 
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -88,7 +93,7 @@ public class FirstFragment extends Fragment {
 
 //        while(it.hasNext()) {
             TvInputInfo aux = mInputs.get(0);
-            Uri uri = TvContract.buildChannelsUriForInput(aux.getId());
+            Uri channelsUri = TvContract.buildChannelsUriForInput(aux.getId());
 
             Map<Long, ChannelInfo> mChannels = new HashMap<>();
 
@@ -107,7 +112,7 @@ public class FirstFragment extends Fragment {
 //        String[] projection = {TvContract.Channels._ID, TvContract.Channels.COLUMN_ORIGINAL_NETWORK_ID};
 
             try (Cursor cursor =
-                         cr.query(uri, projections,null, null, null)
+                         cr.query(channelsUri, projections,null, null, null)
             ) {
                 if (cursor != null) {
 //                    cursor.moveToPosition(0);
@@ -119,7 +124,7 @@ public class FirstFragment extends Fragment {
 //                    cursor.moveToPosition(0);
                     Log.d("TAG", String.valueOf(cursor.getPosition() ));
                     Log.d("TAG", cursor.getColumnName(0));
-                    Log.d("TAG", String.valueOf(cursor.isLast()));
+//                    Log.d("TAG", String.valueOf(cursor.isLast()));
 //                    Log.d("TAG", String.valueOf(cursor.moveToNext()));
                     while (cursor.moveToNext()) {
                         Log.d("TAG", "cursor moves to next");
@@ -129,6 +134,32 @@ public class FirstFragment extends Fragment {
                 }
             }
 //        Log.d("TAG", String.valueOf(map.size()));
+
+
+        for (Map.Entry<Long, ChannelInfo> channel : mChannels.entrySet()) {
+            Uri channelUri = TvContract.buildChannelUri(channel.getKey());
+            Log.d("TAG for channelUri", channelUri.toString());
+
+            List<Program> programs = new ArrayList<>();
+            Uri uri = TvContract.buildProgramsUriForChannel(channelUri);
+
+            Cursor cursor = null;
+            try {
+                cursor = cr.query(uri, Program.PROJECTION, null, null, null);
+                while (cursor != null && cursor.moveToNext()) {
+                    programs.add(Program.fromCursor(cursor));
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "Unable to get programs for " + channelUri, e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+            Log.d(TAG, String.valueOf(programs.size()));
+            Log.d(TAG, programs.toString());
+
+        }
 
 //
 //            Cursor cur = mContext.getContentResolver().query(uri, projections, null, null, null);
