@@ -2,8 +2,13 @@ package com.mini.livetvapp;
 
 import static android.media.tv.TvInputInfo.TYPE_COMPONENT;
 
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
+
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
@@ -17,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.tvprovider.media.tv.TvContractCompat;
 
@@ -28,6 +34,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import androidx.core.app.ActivityCompat;
 
 public class FirstFragment extends Fragment {
 
@@ -55,6 +62,21 @@ public class FirstFragment extends Fragment {
         mTvInputManager = (TvInputManager) mContext.getSystemService(Context.TV_INPUT_SERVICE);
 
         initInputList();
+
+        Log.d("TAG for permission1", String.valueOf(checkSelfPermission(mContext, "INTERNET")));
+        Log.d("TAG for permission2", String.valueOf(checkSelfPermission(mContext, "READ_EXTERNAL_STORAGE")));
+        Log.d("TAG for permission3", String.valueOf(checkSelfPermission(mContext, "READ_TV_LISTINGS")));
+        Log.d("TAG for permission4", String.valueOf(checkSelfPermission(mContext, "READ_CONTACTS")));
+        Log.d("TAG for permission5", String.valueOf(checkSelfPermission(mContext, "WRITE_EPG_DATA")));
+        Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(checkSelfPermission(mContext, "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA") == PermissionChecker.PERMISSION_GRANTED ));
+
+        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
+                "android.permission.READ_TV_LISTINGS",
+                "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"} , 0);
+
+        Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(checkSelfPermission(mContext, "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA") == PermissionChecker.PERMISSION_GRANTED ));
+
+
 
 //        String[] projection =  {
 //                TvContract.Channels._ID,

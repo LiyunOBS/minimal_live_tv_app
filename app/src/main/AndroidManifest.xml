@@ -34,14 +34,18 @@
 <!--    <uses-permission android:name="android.permission.MODIFY_PARENTAL_CONTROLS"/>-->
 <!--    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>-->
 <!--    <uses-permission android:name="android.permission.READ_CONTENT_RATING_SYSTEMS"/>-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_TV_LISTINGS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
+    <uses-permission android:name="android.permission.READ_TV_LISTINGS"
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 <!--    <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA"/>
     <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA"/>
-    <uses-permission android:name="com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"/>
+    <uses-permission android:name="com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="com.android.providers.tv.permission.ACCESS_WATCHED_PROGRAMS"/>
     <!-- Permissions/feature for USB tuner -->
 <!--    <uses-permission android:name="android.permission.DVB_DEVICE"/>-->
@@ -59,11 +63,12 @@
         android:required="false"/>
 
     <!-- Receives input events from the TV app. -->
-<!--    <permission android:name="com.android.tv.permission.RECEIVE_INPUT_EVENT"-->
-<!--        android:description="@string/permdesc_receiveInputEvent"-->
-<!--        android:label="@string/permlab_receiveInputEvent"-->
-<!--        android:protectionLevel="signatureOrSystem"/>-->
-<!--    &lt;!&ndash; Customizes Live TV with customization packages. &ndash;&gt;-->
+    <permission android:name="com.android.tv.permission.RECEIVE_INPUT_EVENT"
+        android:label="@string/permlab_receiveInputEvent"
+        android:protectionLevel="signatureOrSystem"
+        android:description="@string/permdesc_receiveInputEvent"
+        tools:ignore="SignatureOrSystemPermissions"/>
+    <!-- Customizes Live TV with customization packages. -->
 <!--    <permission android:name="com.android.tv.permission.CUSTOMIZE_TV_APP"-->
 <!--        android:description="@string/permdesc_customizeTvApp"-->
 <!--        android:label="@string/permlab_customizeTvApp"-->

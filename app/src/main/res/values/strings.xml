@@ -9,4 +9,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="permlab_receiveInputEvent" translatable="false">receive input events from Live TV app</string>
+    <!-- Description of an application permission, listed so the user can choose
+        whether they want to allow the application to do this. -->
+    <string name="permdesc_receiveInputEvent" translatable="false">Allows the app to receive input events from Live TV app</string>
+
+
 </resources>
