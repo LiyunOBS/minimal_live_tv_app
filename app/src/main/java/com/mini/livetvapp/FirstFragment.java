@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
+import android.media.tv.TvView;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.tvprovider.media.tv.Program;
 import androidx.tvprovider.media.tv.TvContractCompat;
 
@@ -68,18 +72,20 @@ public class FirstFragment extends Fragment {
 
         initInputList();
 
-        Log.d("TAG for permission1", String.valueOf(checkSelfPermission(mContext, "INTERNET")));
-        Log.d("TAG for permission2", String.valueOf(checkSelfPermission(mContext, "READ_EXTERNAL_STORAGE")));
-        Log.d("TAG for permission3", String.valueOf(checkSelfPermission(mContext, "READ_TV_LISTINGS")));
-        Log.d("TAG for permission4", String.valueOf(checkSelfPermission(mContext, "READ_CONTACTS")));
-        Log.d("TAG for permission5", String.valueOf(checkSelfPermission(mContext, "WRITE_EPG_DATA")));
-        Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(checkSelfPermission(mContext, "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA") == PermissionChecker.PERMISSION_GRANTED ));
 
-        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
-                "android.permission.READ_TV_LISTINGS",
-                "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"} , 0);
 
-        Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(checkSelfPermission(mContext, "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA") == PermissionChecker.PERMISSION_GRANTED ));
+//        Log.d("TAG for permission1", String.valueOf(checkSelfPermission(mContext, "INTERNET")));
+//        Log.d("TAG for permission2", String.valueOf(checkSelfPermission(mContext, "READ_EXTERNAL_STORAGE")));
+//        Log.d("TAG for permission3", String.valueOf(checkSelfPermission(mContext, "READ_TV_LISTINGS")));
+//        Log.d("TAG for permission4", String.valueOf(checkSelfPermission(mContext, "READ_CONTACTS")));
+//        Log.d("TAG for permission5", String.valueOf(checkSelfPermission(mContext, "WRITE_EPG_DATA")));
+//        Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(checkSelfPermission(mContext, "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA") == PermissionChecker.PERMISSION_GRANTED ));
+//
+//        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
+//                "android.permission.READ_TV_LISTINGS",
+//                "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"} , 0);
+//
+//        Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(checkSelfPermission(mContext, "com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA") == PermissionChecker.PERMISSION_GRANTED ));
 
 
 
@@ -161,37 +167,9 @@ public class FirstFragment extends Fragment {
 
         }
 
-//
-//            Cursor cur = mContext.getContentResolver().query(uri, projections, null, null, null);
-//            Log.d("TAG", cur.toString());
-//
-//            if(cur.moveToFirst()) {
-//                Log.d("TAG", "not empty cursors");
-//            }
+//        TvView mTvView = findViewById(R.id.tv_view);;
+//        mTvView.tune(inputId, channelUri);
 
-//        }
-
-
-
-//        for (TvInputInfo i : mInputs) {
-//            Log.d("test for TvInputInfos", i.toString());
-//
-//            Uri uri = TvContract.buildChannelsUriForInput(i.getId());
-//            Log.d("test for TvInputInfos", uri.toString());
-//
-//            int channelCount = 0;
-//
-//
-////            String[] projections = new String[ChannelInfo.PROJECTION.length + 1];
-//
-////            Log.d("test for check point", B?oolean.toString());
-//ss
-//
-//        }
-
-        UnmodifiableChannelData mData = new UnmodifiableChannelData();
-//        Log.d("test for channel", mData.toString());
-//        Log.d("test for channel", mData.channels.toString());
 
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
@@ -199,6 +177,16 @@ public class FirstFragment extends Fragment {
 
     }
 
+//    public void init() {
+//
+//        ArrayList<String> elements = new ArrayList<>();
+//
+//        ListAdapter listAdapter = new ListAdapter(elements, mContext);
+//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listRecyclerView);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+//        recyclerView.setAdapter(listAdapter);
+//    }
 
     public static final class ChannelInfo {
 
@@ -337,6 +325,7 @@ public class FirstFragment extends Fragment {
     private void initInputList() {
 
         mInputs.clear();
+
         for (TvInputInfo input : mTvInputManager.getTvInputList()) {
 
             String inputId = input.getId();
