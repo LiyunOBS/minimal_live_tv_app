@@ -78,7 +78,7 @@ public class ChannelActivity extends AppCompatActivity {
         String[] projections = new String[ChannelInfo.PROJECTION.length + 1];
         projections[0] = TvContract.Channels._ID;
 
-        System.arraycopy(FirstFragment.ChannelInfo.PROJECTION, 0, projections, 1, FirstFragment.ChannelInfo.PROJECTION.length);
+        System.arraycopy(ChannelInfo.PROJECTION, 0, projections, 1, ChannelInfo.PROJECTION.length);
 
 
         try (Cursor cursor =

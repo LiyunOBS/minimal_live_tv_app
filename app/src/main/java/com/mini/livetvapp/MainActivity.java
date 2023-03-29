@@ -12,7 +12,6 @@ import android.media.tv.TvInputManager;
 import android.os.Bundle;
 
 import com.mini.livetvapp.databinding.ActivityMainBinding;
-import com.mini.livetvapp.databinding.FragmentFirstBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +47,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.tvprovider.media.tv.Program;
 import androidx.tvprovider.media.tv.TvContractCompat;
-
-import com.mini.livetvapp.databinding.FragmentFirstBinding;
 
 import java.nio.channels.Channel;
 import java.util.ArrayList;
