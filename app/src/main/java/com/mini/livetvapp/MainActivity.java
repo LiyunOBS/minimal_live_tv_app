@@ -1,10 +1,12 @@
 package com.mini.livetvapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import android.util.MutableInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.PermissionChecker;
@@ -58,7 +61,7 @@ import androidx.core.app.ActivityCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "TAG for Test";
+    private static final String TAG = "TAG for MainActivity";
     private static final boolean DEBUG = true;
     private Context mContext;
     private ActivityMainBinding binding;
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
 //        binding = ActivityMainBinding.inflate(getLayoutInflater());
 //        setContentView(binding.getRoot());
 
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         initInputList();
+        handleListAdapter();
 
     }
 
@@ -105,25 +110,32 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        ListAdapter listAdapter = new ListAdapter(mInputIds, mContext);
+
+    }
+
+    private void handleListAdapter() {
+
+        ListAdapter listAdapter = new ListAdapter(mInputIds, mContext, new ListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String item) {
+                Toast.makeText(mContext, "item clicked", Toast.LENGTH_LONG).show();
+
+                Intent channelActivityIntent = new Intent(MainActivity.this, ChannelActivity.class);
+                channelActivityIntent.putExtra("inputId", item);
+                startActivity(channelActivityIntent);
+                if(DEBUG) {
+
+                    Log.d(TAG, "selected TvInputId" + item);
+                }
+            }
+        });
         RecyclerView recyclerView = findViewById(R.id.listRecyclerView);
+        if(DEBUG) {
+            Log.d(TAG, "after findViewById " + recyclerView.toString());
+        }
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listAdapter);
     }
 
-//    public void populateList() {
-//        elements = new ArrayList<>();
-//    }
-//
-//
-//    public void init() {
-//        populateList();
-//
-//        ListAdapter listAdapter = new ListAdapter(elements, this);
-//        RecyclerView recyclerView = findViewById(R.id.listRecyclerView);
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(listAdapter);
-//    }
 }

@@ -17,20 +17,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+
+    public interface OnItemClickListener {
+        void onItemClick(String item);
+    }
+
     private List<String> mData;
     private LayoutInflater mInflater;
     private Context context;
+    private final OnItemClickListener listener;
 
 
-    public ListAdapter(List<String> itemList, Context context) {
+    public ListAdapter(List<String> itemList, Context context, OnItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.mData = itemList;
+        this.listener = listener;
     }
 
     @Override
     public int getItemCount() { return mData.size(); }
 
+
+    public List<String> getmData() {
+        return mData;
+    }
 
     @Override
     public ListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,26 +53,31 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ListAdapter.ViewHolder holder, final int position) {
 //        holder.cv.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition));
-        holder.bindData(mData.get(position));
+        holder.bindData(mData.get(position), listener);
     }
 
 
     public void setItems(List<String> items) { mData = items; }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        CardView cv;
+//        CardView cv;
 
         ViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameTextView);
-            cv = itemView.findViewById(R.id.cv_input);
+//            cv = itemView.findViewById(R.id.cv_input);
         }
 
 
-        void bindData(final String item) {
+        void bindData(final String item, final OnItemClickListener listener) {
             name.setText(item);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
         }
     }
 }

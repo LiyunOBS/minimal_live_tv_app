@@ -2,77 +2,64 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mini.livetvapp">
-
-<!--    &lt;!&ndash; Required to play internet-based streaming contents. &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.INTERNET" />-->
-
-<!--    &lt;!&ndash; Required to update or read existing channel and program information in TvProvider. &ndash;&gt;-->
-<!--    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />-->
-
-<!--    &lt;!&ndash; Required to update channel and program information in TvProvider. &ndash;&gt;-->
-<!--    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />-->
-
-<!--    &lt;!&ndash; Required to sync EPG data after reboot. For details,-->
-<!--    please see {@link JobInfo.Builder#setPersisted}&ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
-
+    <!-- &lt;!&ndash; Required to play internet-based streaming contents. &ndash;&gt; -->
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+    <!-- &lt;!&ndash; Required to update or read existing channel and program information in TvProvider. &ndash;&gt; -->
+    <!-- <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" /> -->
+    <!-- &lt;!&ndash; Required to update channel and program information in TvProvider. &ndash;&gt; -->
+    <!-- <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" /> -->
+    <!-- &lt;!&ndash; Required to sync EPG data after reboot. For details, -->
+    <!-- please see {@link JobInfo.Builder#setPersisted}&ndash;&gt; -->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-
-    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
-    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY"/>
-
-
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-<!--    <uses-permission android:name="android.permission.CHANGE_HDMI_CEC_ACTIVE_SOURCE"/>-->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-<!--    <uses-permission android:name="android.permission.HDMI_CEC"/>-->
-    <uses-permission android:name="android.permission.INTERNET"/>
-<!--    <uses-permission android:name="android.permission.MODIFY_PARENTAL_CONTROLS"/>-->
-<!--    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>-->
-<!--    <uses-permission android:name="android.permission.READ_CONTENT_RATING_SYSTEMS"/>-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- <uses-permission android:name="android.permission.CHANGE_HDMI_CEC_ACTIVE_SOURCE"/> -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- <uses-permission android:name="android.permission.HDMI_CEC"/> -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.MODIFY_PARENTAL_CONTROLS"/> -->
+    <!-- <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/> -->
+    <!-- <uses-permission android:name="android.permission.READ_CONTENT_RATING_SYSTEMS"/> -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:remove="android:maxSdkVersion" />
-    <uses-permission android:name="android.permission.READ_TV_LISTINGS"
+    <uses-permission
+        android:name="android.permission.READ_TV_LISTINGS"
         tools:remove="android:maxSdkVersion" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-<!--    <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/> -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:remove="android:maxSdkVersion" />
-    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA"/>
-    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA"/>
-    <uses-permission android:name="com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"
+    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
+    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
+    <uses-permission
+        android:name="com.android.providers.tv.permission.ACCESS_ALL_EPG_DATA"
         tools:remove="android:maxSdkVersion" />
-    <uses-permission android:name="com.android.providers.tv.permission.ACCESS_WATCHED_PROGRAMS"/>
-    <!-- Permissions/feature for USB tuner -->
-<!--    <uses-permission android:name="android.permission.DVB_DEVICE"/>-->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="com.android.providers.tv.permission.ACCESS_WATCHED_PROGRAMS" /> <!-- Permissions/feature for USB tuner -->
+    <!-- <uses-permission android:name="android.permission.DVB_DEVICE"/> -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <uses-feature android:name="android.hardware.usb.host"
-        android:required="false"/>
-
-    <!-- Limit only for Android TV -->
-    <uses-feature android:name="android.software.leanback"
-        android:required="true"/>
-    <uses-feature android:name="android.software.live_tv"
-        android:required="true"/>
-    <uses-feature android:name="android.hardware.touchscreen"
-        android:required="false"/>
-
-    <!-- Receives input events from the TV app. -->
-    <permission android:name="com.android.tv.permission.RECEIVE_INPUT_EVENT"
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" /> <!-- Limit only for Android TV -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+    <uses-feature
+        android:name="android.software.live_tv"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" /> <!-- Receives input events from the TV app. -->
+    <permission
+        android:name="com.android.tv.permission.RECEIVE_INPUT_EVENT"
+        android:description="@string/permdesc_receiveInputEvent"
         android:label="@string/permlab_receiveInputEvent"
         android:protectionLevel="signatureOrSystem"
-        android:description="@string/permdesc_receiveInputEvent"
-        tools:ignore="SignatureOrSystemPermissions"/>
-    <!-- Customizes Live TV with customization packages. -->
-<!--    <permission android:name="com.android.tv.permission.CUSTOMIZE_TV_APP"-->
-<!--        android:description="@string/permdesc_customizeTvApp"-->
-<!--        android:label="@string/permlab_customizeTvApp"-->
-<!--        android:protectionLevel="signatureOrSystem"/>-->
+        tools:ignore="SignatureOrSystemPermissions" />
 
     <application
         android:allowBackup="true"
@@ -86,7 +73,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.MyApplication.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -94,18 +80,14 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name=".SystemSetupActivity"-->
-<!--            android:configChanges="keyboard|keyboardHidden"-->
-<!--            android:exported="true"-->
-<!--            android:label="Live TV"-->
-<!--            android:launchMode="singleInstance"-->
-<!--            android:theme="@style/Theme.MyApplication.NoActionBar">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.android.tv.action.LAUNCH_SYSTEM_SETUP"/>-->
-
-<!--                <category android:name="android.intent.category.DEFAULT"/>-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <activity
+            android:name=".ChannelActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
