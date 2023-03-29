@@ -43,6 +43,7 @@ public class ChannelActivity extends AppCompatActivity {
     private List<ChannelInfo> channelInfoList;
     private Map<Long, List<Program>> mPrograms;
     private List<List<Program>> programList;
+    private ChannelListAdapter channelListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,10 @@ public class ChannelActivity extends AppCompatActivity {
         if (mChannels.size() > 0) {
             searchProgramListForChannels();
         }
-        if (mPrograms.size() > 0) {
-            handleListAdapter();
-        }
+//        if (mPrograms.size() > 0) {
+//            handleListAdapter();
+//        }
+        handleListAdapter();
 
     }
 
@@ -159,7 +161,50 @@ public class ChannelActivity extends AppCompatActivity {
 
     private void handleListAdapter() {
 
-        ChannelListAdapter channelListAdapter = new ChannelListAdapter(channelInfoList, programList, mContext, new ChannelListAdapter.OnItemClickListener() {
+        RecyclerView recyclerView = findViewById(R.id.channelListRecyclerView);
+        TextView emptyListView = findViewById(R.id.emptyChannelListTextView);
+
+        if (mChannels.size() == 0 || mPrograms.size() == 0) {
+
+            recyclerView.setVisibility(View.GONE);
+            emptyListView.setVisibility(View.VISIBLE);
+
+        } else {
+
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListView.setVisibility(View.GONE);
+
+            channelListAdapter = createListAdapter();
+            if(DEBUG) {
+                Log.d(TAG, "after new create");
+            }
+//            RecyclerView recyclerView = findViewById(R.id.channelListRecyclerView);
+            if(DEBUG) {
+                Log.d(TAG, "after findViewById " + recyclerView.toString());
+            }
+            recyclerView.setHasFixedSize(true);
+            if(DEBUG) {
+                Log.d(TAG, "after setHasFixedSize");
+            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            if(DEBUG) {
+                Log.d(TAG, "setLayoutManager");
+            }
+            recyclerView.setAdapter(channelListAdapter);
+            if(DEBUG) {
+                Log.d(TAG, "after set adapter");
+            }
+        }
+    }
+
+//    private ChannelListAdapter createEmptyListAdapter() {
+//
+//        return new ChannelListAdapter(mContext);
+//    }
+
+    private ChannelListAdapter createListAdapter() {
+
+        return new ChannelListAdapter(channelInfoList, programList, mContext, new ChannelListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(TextView view) {
                 Toast.makeText(mContext, "channel clicked", Toast.LENGTH_LONG).show();
@@ -167,32 +212,11 @@ public class ChannelActivity extends AppCompatActivity {
                 Intent channelActivityIntent = new Intent(ChannelActivity.this, ChannelActivity.class);
                 channelActivityIntent.putExtra("selectedChannel", view.getText());
                 startActivity(channelActivityIntent);
-                if(DEBUG) {
+                if (DEBUG) {
 
                     Log.d(TAG, "selected channel" + view.getText());
                 }
             }
         });
-
-        if(DEBUG) {
-            Log.d(TAG, "after new create");
-        }
-        RecyclerView recyclerView = findViewById(R.id.channelListRecyclerView);
-        if(DEBUG) {
-            Log.d(TAG, "after findViewById " + recyclerView.toString());
-        }
-        recyclerView.setHasFixedSize(true);
-        if(DEBUG) {
-            Log.d(TAG, "after setHasFixedSize");
-        }
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if(DEBUG) {
-            Log.d(TAG, "setLayoutManager");
-        }
-        recyclerView.setAdapter(channelListAdapter);
-        if(DEBUG) {
-            Log.d(TAG, "after set adapter");
-        }
     }
-
 }

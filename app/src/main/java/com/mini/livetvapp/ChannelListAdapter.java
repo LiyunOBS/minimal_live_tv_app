@@ -45,6 +45,17 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         }
     }
 
+    public ChannelListAdapter(Context context) {
+        this.mInflater = LayoutInflater.from(context);
+        this.context = context;
+        this.channelInfoList = null;
+        this.programList = null;
+        this.listener = null;
+        if(DEBUG) {
+            Log.d(TAG, "after empty channelListAdapter is newly created.");
+        }
+    }
+
     @Override
     public int getItemCount() { return channelInfoList.size(); }
 
@@ -112,16 +123,18 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 @SuppressLint("RestrictedApi") String title = program.getTitle();
 
                 sb.append(title);
-                sb.append(" ,");
+                sb.append(", ");
                 if (count >= 3) {
                     break;
                 }
                 count++;
             }
-
-            sb.substring(0, sb.length() - 2);
-
-            return sb.toString();
+            int len = sb.length();
+            if (len < 2) {
+                sb.append("No Program List Available.");
+                return sb.toString();
+            }
+            return sb.substring(0, len - 2);
 
         }
     }
