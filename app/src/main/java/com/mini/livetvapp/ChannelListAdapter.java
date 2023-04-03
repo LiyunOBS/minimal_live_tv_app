@@ -2,12 +2,14 @@ package com.mini.livetvapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.tvprovider.media.tv.Program;
 
@@ -24,20 +26,22 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     protected OnItemClickListener OnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(TextView view);
+        void onItemClick(View view);
     }
 
 //    private List<String> mData;
     private List<ChannelInfo> channelInfoList;
+    private List<Long> channelIdList;
     private List<List<Program>> programList;
     private LayoutInflater mInflater;
     private Context context;
     private final OnItemClickListener listener;
 
-    public ChannelListAdapter(List<ChannelInfo> channels, List<List<Program>> programs, Context context, OnItemClickListener listener) {
+    public ChannelListAdapter(List<ChannelInfo> channels, List<Long> channelIds, List<List<Program>> programs, Context context, OnItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.channelInfoList = channels;
+        this.channelIdList = channelIds;
         this.programList = programs;
         this.listener = listener;
         if(DEBUG) {
@@ -68,7 +72,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     @Override
     public void onBindViewHolder(final ChannelListAdapter.ViewHolder holder, final int position) {
 //        holder.cv.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition));
-        holder.bindData(channelInfoList.get(position), programList.get(position), listener);
+        holder.bindData(channelInfoList.get(position), channelIdList.get(position), programList.get(position), position, listener);
     }
 
 
@@ -77,22 +81,29 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         TextView channelNumber;
         TextView channelName;
         TextView programName;
-//        CardView cv;
+        TextView channelIndex;
+        TextView pos;
+        CardView cv;
 
         ViewHolder(View itemView) {
             super(itemView);
             channelNumber = itemView.findViewById(R.id.channelNumber);
             channelName = itemView.findViewById(R.id.channelName);
             programName = itemView.findViewById(R.id.programList);
-//            cv = itemView.findViewById(R.id.cv_input);
+//            channelIndex = itemView.findViewById(R.id.channelId);
+            pos = itemView.findViewById(R.id.channelId);
+            cv = itemView.findViewById(R.id.channelCV);
         }
 
 
-        void bindData(final ChannelInfo channel, final List<Program> programs, final OnItemClickListener listener) {
+        void bindData(final ChannelInfo channel, final Long channelId, final List<Program> programs, int position, final OnItemClickListener listener) {
 
             String selectedChannelNumber = channel.getNumber();
             String selectedChannelName = channel.getName();
+//            String selectedChannelId = channel.ge;
 //            String programsForSelectedChannel = "aaa, bbb, ccc, ddd";
+            String selectedChannelId = channelId.toString();
+            String selectedPosition = Integer.valueOf(position).toString();
             String programsForSelectedChannel = createProgramList(programs);
 
             if (DEBUG) {
@@ -100,12 +111,14 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 Log.d(TAG, "channel num - " + selectedChannelNumber);
                 Log.d(TAG, "channel name - " + selectedChannelName);
                 Log.d(TAG, "program list - " + programsForSelectedChannel);
+                Log.d(TAG, "channel position - " + selectedPosition);
             }
 
             channelNumber.setText(selectedChannelNumber);
             channelName.setText(selectedChannelName);
+//            channelIndex.setText(selectedChannelId);
             programName.setText(programsForSelectedChannel);
-            channelName.setOnClickListener(new TextView.OnClickListener() {
+            cv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClick(channelNumber);

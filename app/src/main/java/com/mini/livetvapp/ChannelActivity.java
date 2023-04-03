@@ -10,14 +10,12 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.mini.livetvapp.utils.ChannelInfo;
-import com.mini.livetvapp.ChannelListAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.tvprovider.media.tv.Program;
 
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -41,6 +39,7 @@ public class ChannelActivity extends AppCompatActivity {
     private String inputId;
     private Map<Long, ChannelInfo> mChannels = new HashMap<>();
     private List<ChannelInfo> channelInfoList;
+    private List<Long> channelIdList;
     private Map<Long, List<Program>> mPrograms;
     private List<List<Program>> programList;
     private ChannelListAdapter channelListAdapter;
@@ -102,6 +101,7 @@ public class ChannelActivity extends AppCompatActivity {
     private void searchProgramListForChannels() {
         mPrograms = new HashMap<Long, List<Program>>();
         channelInfoList = new ArrayList<>();
+        channelIdList = new ArrayList<>();
         programList = new ArrayList<>();
         long durationMs = DEFAULT_IMMEDIATE_EPG_DURATION_MILLIS;
         long startMs = System.currentTimeMillis();
@@ -118,8 +118,8 @@ public class ChannelActivity extends AppCompatActivity {
 
             Uri uri = TvContract.buildProgramsUriForChannel(channelUri);
             if(DEBUG) {
-                Log.d(TAG, "Channel Uri " + channelUri.toString());
-                Log.d(TAG, "Program Uri " + uri.toString());
+//                Log.d(TAG, "Channel Uri " + channelUri.toString());
+//                Log.d(TAG, "Program Uri " + uri.toString());
             }
             Cursor cursor = null;
             try {
@@ -130,8 +130,9 @@ public class ChannelActivity extends AppCompatActivity {
                 while (cursor != null && cursor.moveToNext()) {
                     Program program = Program.fromCursor(cursor);
                     if(DEBUG) {
-                        Log.d(TAG, "Program StartTimeUtcMillis " + String.valueOf(program.getStartTimeUtcMillis() ));
-                        Log.d(TAG, "Program EndTimeUtcMillis " + String.valueOf(program.getEndTimeUtcMillis()));
+                        Log.d(TAG, program.toString());
+//                        Log.d(TAG, "Program StartTimeUtcMillis " + String.valueOf(program.getStartTimeUtcMillis() ));
+//                        Log.d(TAG, "Program EndTimeUtcMillis " + String.valueOf(program.getEndTimeUtcMillis()));
                     }
                     if (program.getStartTimeUtcMillis() >= startMs && program.getEndTimeUtcMillis() <= endMs ) {
                         if(DEBUG) {
@@ -154,6 +155,7 @@ public class ChannelActivity extends AppCompatActivity {
 
             mPrograms.put(channel.getKey(), programs);
             channelInfoList.add(channel.getValue());
+            channelIdList.add(channel.getKey());
             programList.add(programs);
         }
 
@@ -204,19 +206,49 @@ public class ChannelActivity extends AppCompatActivity {
 
     private ChannelListAdapter createListAdapter() {
 
-        return new ChannelListAdapter(channelInfoList, programList, mContext, new ChannelListAdapter.OnItemClickListener() {
+        return new ChannelListAdapter(channelInfoList, channelIdList, programList, mContext, new ChannelListAdapter.OnItemClickListener() {
+
             @Override
-            public void onItemClick(TextView view) {
+            public void onItemClick(View view) {
                 Toast.makeText(mContext, "channel clicked", Toast.LENGTH_LONG).show();
 
-                Intent channelActivityIntent = new Intent(ChannelActivity.this, ChannelActivity.class);
-                channelActivityIntent.putExtra("selectedChannel", view.getText());
-                startActivity(channelActivityIntent);
+//                RecyclerView recyclerViewvvv = findViewById(R.id.channelListRecyclerView);
+
+//                int pos = view.getA
+
+                Intent tvViewIntent = new Intent(ChannelActivity.this, DisplayActivity.class);
+                tvViewIntent.putExtra("selectedInputId", inputId);
+
+//                int itemPosition = mRecyclerView.getChildPosition(view);
                 if (DEBUG) {
 
-                    Log.d(TAG, "selected channel" + view.getText());
+                    Log.d(TAG, "item position " + view.getContext());
+                }
+
+
+
+//                Uri channelUri = TvContract.buildChannelUri(160);
+
+//                TextView channelIndexView = findViewById(R.id.channelId);
+//                String channelId = String.valueOf(channelIndexView.getText());
+
+//                int pos =
+//                Uri channelUri = Uri.;
+
+//                tvViewIntent.putExtra("channelId", channelId);
+                tvViewIntent.putExtra("selectedVerticalScrollbarPosition", view.getVerticalScrollbarPosition());
+
+//                tvViewIntent.putExtra("selectedChannel", getAdapterPosition());
+
+                startActivity(tvViewIntent);
+                if (DEBUG) {
+
+                    Log.d(TAG, "selected InputId " + inputId);
+//                    Log.d(TAG, "selected channelId " + channelId);
+                    Log.d(TAG, "selected channel " + view.getVerticalScrollbarPosition());
                 }
             }
+
         });
     }
 }
