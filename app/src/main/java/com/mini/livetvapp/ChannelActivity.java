@@ -42,7 +42,7 @@ public class ChannelActivity extends AppCompatActivity {
     private List<Long> channelIdList;
     private Map<Long, List<Program>> mPrograms;
     private List<List<Program>> programList;
-    private ChannelListAdapter channelListAdapter;
+//    private ChannelListAdapter channelListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +176,7 @@ public class ChannelActivity extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
             emptyListView.setVisibility(View.GONE);
 
-            channelListAdapter = createListAdapter();
+            ChannelsAdapter channelsAdapter = createListAdapter();
             if(DEBUG) {
                 Log.d(TAG, "after new create");
             }
@@ -192,7 +192,7 @@ public class ChannelActivity extends AppCompatActivity {
             if(DEBUG) {
                 Log.d(TAG, "setLayoutManager");
             }
-            recyclerView.setAdapter(channelListAdapter);
+            recyclerView.setAdapter(channelsAdapter);
             if(DEBUG) {
                 Log.d(TAG, "after set adapter");
             }
@@ -204,51 +204,57 @@ public class ChannelActivity extends AppCompatActivity {
 //        return new ChannelListAdapter(mContext);
 //    }
 
-    private ChannelListAdapter createListAdapter() {
 
-        return new ChannelListAdapter(channelInfoList, channelIdList, programList, mContext, new ChannelListAdapter.OnItemClickListener() {
+    private ChannelsAdapter createListAdapter() {
 
-            @Override
-            public void onItemClick(View view) {
-                Toast.makeText(mContext, "channel clicked", Toast.LENGTH_LONG).show();
-
-//                RecyclerView recyclerViewvvv = findViewById(R.id.channelListRecyclerView);
-
-//                int pos = view.getA
-
-                Intent tvViewIntent = new Intent(ChannelActivity.this, DisplayActivity.class);
-                tvViewIntent.putExtra("selectedInputId", inputId);
-
-//                int itemPosition = mRecyclerView.getChildPosition(view);
-                if (DEBUG) {
-
-                    Log.d(TAG, "item position " + view.getContext());
-                }
-
-
-
-//                Uri channelUri = TvContract.buildChannelUri(160);
-
-//                TextView channelIndexView = findViewById(R.id.channelId);
-//                String channelId = String.valueOf(channelIndexView.getText());
-
-//                int pos =
-//                Uri channelUri = Uri.;
-
-//                tvViewIntent.putExtra("channelId", channelId);
-                tvViewIntent.putExtra("selectedVerticalScrollbarPosition", view.getVerticalScrollbarPosition());
-
-//                tvViewIntent.putExtra("selectedChannel", getAdapterPosition());
-
-                startActivity(tvViewIntent);
-                if (DEBUG) {
-
-                    Log.d(TAG, "selected InputId " + inputId);
-//                    Log.d(TAG, "selected channelId " + channelId);
-                    Log.d(TAG, "selected channel " + view.getVerticalScrollbarPosition());
-                }
-            }
-
-        });
+        return new ChannelsAdapter(mContext, inputId, channelInfoList, channelIdList, programList);
     }
+
+//    private ChannelsAdapter createListAdapter() {
+//
+//        return new ChannelsAdapter(channelInfoList, channelIdList, programList, mContext, new ChannelListAdapter.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(View view) {
+//                Toast.makeText(mContext, "channel clicked", Toast.LENGTH_LONG).show();
+//
+////                RecyclerView recyclerViewvvv = findViewById(R.id.channelListRecyclerView);
+//
+////                int pos = view.getA
+//
+//                Intent tvViewIntent = new Intent(ChannelActivity.this, DisplayActivity.class);
+//                tvViewIntent.putExtra("selectedInputId", inputId);
+//
+////                int itemPosition = mRecyclerView.getChildPosition(view);
+//                if (DEBUG) {
+//
+//                    Log.d(TAG, "item position " + view.getContext());
+//                }
+//
+//
+//
+////                Uri channelUri = TvContract.buildChannelUri(160);
+//
+////                TextView channelIndexView = findViewById(R.id.channelId);
+////                String channelId = String.valueOf(channelIndexView.getText());
+//
+////                int pos =
+////                Uri channelUri = Uri.;
+//
+////                tvViewIntent.putExtra("channelId", channelId);
+//                tvViewIntent.putExtra("selectedVerticalScrollbarPosition", view.getVerticalScrollbarPosition());
+//
+////                tvViewIntent.putExtra("selectedChannel", getAdapterPosition());
+//
+//                startActivity(tvViewIntent);
+//                if (DEBUG) {
+//
+//                    Log.d(TAG, "selected InputId " + inputId);
+////                    Log.d(TAG, "selected channelId " + channelId);
+//                    Log.d(TAG, "selected channel " + view.getVerticalScrollbarPosition());
+//                }
+//            }
+//
+//        });
+//    }
 }

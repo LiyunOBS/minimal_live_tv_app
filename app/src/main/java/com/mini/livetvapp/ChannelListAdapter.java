@@ -76,7 +76,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView channelNumber;
         TextView channelName;
@@ -92,7 +92,9 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             programName = itemView.findViewById(R.id.programList);
 //            channelIndex = itemView.findViewById(R.id.channelId);
             pos = itemView.findViewById(R.id.channelId);
-            cv = itemView.findViewById(R.id.channelCV);
+//            cv = itemView.findViewById(R.id.channelCV);
+
+//            itemView.setOnClickListener(this);
         }
 
 
@@ -118,12 +120,12 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             channelName.setText(selectedChannelName);
 //            channelIndex.setText(selectedChannelId);
             programName.setText(programsForSelectedChannel);
-            cv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClick(channelNumber);
-                }
-            });
+//            cv.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onItemClick(channelNumber);
+//                }
+//            });
         }
 
         private String createProgramList(final List<Program> programs) {
