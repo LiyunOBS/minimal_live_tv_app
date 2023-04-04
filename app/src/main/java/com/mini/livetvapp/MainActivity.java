@@ -98,12 +98,12 @@ public class MainActivity extends AppCompatActivity {
             if (DEBUG) {
                 Log.d(TAG, inputId);
                 int state = mTvInputManager.getInputState(inputId);
-                Log.d(TAG, "state " + String.valueOf(state));
+//                Log.d(TAG, "state " + String.valueOf(state));
                 Log.d(TAG, "isPassThroughInput " + Boolean.toString(input.isPassthroughInput()));
-                Log.d(TAG, "getServiceInfo " + input.getServiceInfo().toString());
-                Log.d(TAG, "type " + String.valueOf(input.getType()));
-                Log.d(TAG, "tunerCount " + String.valueOf(input.getTunerCount()));
-                Log.d(TAG, "type_component " + String.valueOf(TYPE_COMPONENT));
+//                Log.d(TAG, "getServiceInfo " + input.getServiceInfo().toString());
+//                Log.d(TAG, "type " + String.valueOf(input.getType()));
+//                Log.d(TAG, "tunerCount " + String.valueOf(input.getTunerCount()));
+//                Log.d(TAG, "type_component " + String.valueOf(TYPE_COMPONENT));
             }
         }
 
