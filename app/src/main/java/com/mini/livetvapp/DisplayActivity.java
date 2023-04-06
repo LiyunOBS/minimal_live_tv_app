@@ -24,34 +24,20 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_tvview);
-
         mTvView = findViewById(R.id.tvview);
+
         Intent intent = getIntent();
         inputId = intent.getStringExtra("selectedInputId");
-//        inputId = "com.example.android.sampletvinput/.rich.RichTvInputService";
         String channelId = intent.getStringExtra("selectedChannelId");
-        if (DEBUG) {
-
-            Log.d(TAG, "create tvView");
-            Log.d(TAG, "inputId " + inputId);
-            Log.d(TAG, "channelId " + channelId);
-        }
-
-        Long id = Long.valueOf(channelId);
-
-        if (DEBUG) {
-
-            Log.d(TAG, "Long Id " + id);
-        }
-//        Long id = Long.valueOf(161);
+        Long id = Long.parseLong(channelId);
         channelUri = TvContract.buildChannelUri(id);
 
         if (DEBUG) {
-
-            Log.d(TAG, "channel Uri " + channelUri);
+            Log.d(TAG, "create tvView");
+            Log.d(TAG, "tune with inputId " + inputId);
+            Log.d(TAG, "tune with channel Uri " + channelUri);
         }
 
         mTvView.tune(inputId, channelUri);
-
     }
 }

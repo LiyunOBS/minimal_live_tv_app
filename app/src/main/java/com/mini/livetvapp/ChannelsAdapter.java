@@ -1,15 +1,12 @@
 package com.mini.livetvapp;
 
 import android.annotation.SuppressLint;
-//import android.support.v7.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
-import android.media.tv.TvView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,11 +14,9 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.tvprovider.media.tv.Program;
-
 import com.mini.livetvapp.utils.ChannelInfo;
 
 import java.util.List;
-
 
 public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHolder>{
 
@@ -59,7 +54,6 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
         String selectedChannelName = channel.getName();
         String programsForSelectedChannel = createProgramList(programs);
 
-
         holder.channelName.setText(selectedChannelName);
         holder.channelNumber.setText(selectedChannelNumber);
         holder.programName.setText(programsForSelectedChannel);
@@ -74,18 +68,13 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
                 tvViewIntent.putExtra("selectedChannelId", selectedChannelId);
 
                 if (DEBUG) {
-
-                    Log.d(TAG, "channel num - " + inputId);
-                    Log.d(TAG, "channel name - " + selectedChannelId);
+                    Log.d(TAG, "selected inputId - " + inputId);
+                    Log.d(TAG, "selected channel - " + selectedChannelId);
                 }
                 mContext.startActivity(tvViewIntent);
-
             }
         });
-
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -93,22 +82,19 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView channelNumber;
-        TextView channelName;
-        TextView programName;
-        public CardView cardView;
-        public RelativeLayout relativeLayout;
+        private TextView channelNumber;
+        private TextView channelName;
+        private TextView programName;
+        private CardView cardView;
+
         public ViewHolder(View itemView) {
             super(itemView);
             channelNumber = (TextView) itemView.findViewById(R.id.channelNumber);
             channelName = (TextView) itemView.findViewById(R.id.channelName);
             programName = (TextView) itemView.findViewById(R.id.programList);
-//            relativeLayout = (RelativeLayout)itemView.findViewById(R.id.relativeLayout);
             cardView = (CardView)itemView.findViewById(R.id.channelCV);
         }
     }
-
-
 
     private String createProgramList(final List<Program> programs) {
 
@@ -118,7 +104,6 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
         for (Program program : programs) {
 
             @SuppressLint("RestrictedApi") String title = program.getTitle();
-
             sb.append(title);
             sb.append(", ");
             if (count >= 3) {
