@@ -1,11 +1,14 @@
 package com.mini.livetvapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
 import android.os.Bundle;
@@ -33,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         initInputList();
         handleListAdapter();
-
     }
 
     private void initInputList() {
