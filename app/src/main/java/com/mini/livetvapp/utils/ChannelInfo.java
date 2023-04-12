@@ -8,7 +8,10 @@ public final class ChannelInfo {
     public static final String[] PROJECTION = {
             TvContract.Channels.COLUMN_DISPLAY_NUMBER,
             TvContract.Channels.COLUMN_DISPLAY_NAME,
+            TvContract.Channels.COLUMN_APP_LINK_ICON_URI,
             TvContract.Channels.COLUMN_ORIGINAL_NETWORK_ID,
+            TvContract.Channels.COLUMN_SEARCHABLE,
+            TvContract.Channels.COLUMN_BROWSABLE
     };
 
     private static final String TAG = "TAG for ChannelInfo";
@@ -17,6 +20,8 @@ public final class ChannelInfo {
     public final String name;
     public final String logoUrl;
     public final int originalNetworkId;
+    public final int searchable;
+    public final int browsable;
 //        public final int videoWidth;
 //        public final int videoHeight;
 //        public final float videoPixelAspectRatio;
@@ -41,9 +46,21 @@ public final class ChannelInfo {
         if (index >= 0) {
             builder.setName(c.getString(index));
         }
+        index = c.getColumnIndex(TvContract.Channels.COLUMN_APP_LINK_ICON_URI);
+        if (index >= 0) {
+            builder.setLogoUrl(c.getString(index));
+        }
         index = c.getColumnIndex(TvContract.Channels.COLUMN_ORIGINAL_NETWORK_ID);
         if (index >= 0) {
             builder.setOriginalNetworkId(c.getInt(index));
+        }
+        index = c.getColumnIndex(TvContract.Channels.COLUMN_SEARCHABLE);
+        if (index >= 0) {
+            builder.setSearchable(c.getInt(index));
+        }
+        index = c.getColumnIndex(TvContract.Channels.COLUMN_BROWSABLE);
+        if (index >= 0) {
+            builder.setBrowsable(c.getInt(index));
         }
         return builder.build();
     }
@@ -52,7 +69,9 @@ public final class ChannelInfo {
             String number,
             String name,
             String logoUrl,
-            int originalNetworkId
+            int originalNetworkId,
+            int searchable,
+            int browsable
 //                int videoWidth,
 //                int videoHeight,
 //                float videoPixelAspectRatio,
@@ -70,6 +89,8 @@ public final class ChannelInfo {
         this.name = name;
         this.logoUrl = logoUrl;
         this.originalNetworkId = originalNetworkId;
+        this.searchable = searchable;
+        this.browsable = browsable;
 //            this.videoWidth = videoWidth;
 //            this.videoHeight = videoHeight;
 //            this.videoPixelAspectRatio = videoPixelAspectRatio;
@@ -92,11 +113,21 @@ public final class ChannelInfo {
         return number;
     }
 
+    public int getSearchable() {
+        return searchable;
+    }
+
+    public int getBrowsable() {
+        return browsable;
+    }
+
     public static class Builder {
         private String mNumber;
         private String mName;
-        private String mLogoUrl = null;
+        private String mLogoUrl;
         private int mOriginalNetworkId;
+        private int mSearchable;
+        private int mBrowsable;
 
         public Builder() {}
 
@@ -120,12 +151,24 @@ public final class ChannelInfo {
             return this;
         }
 
+        public Builder setSearchable(int searchable) {
+            mSearchable = searchable;
+            return this;
+        }
+
+        public Builder setBrowsable(int browsable) {
+            mBrowsable = browsable;
+            return this;
+        }
+
         public ChannelInfo build() {
             return new ChannelInfo(
                     mNumber,
                     mName,
                     mLogoUrl,
-                    mOriginalNetworkId
+                    mOriginalNetworkId,
+                    mSearchable,
+                    mBrowsable
 //                    mVideoWidth,
 //                    mVideoHeight,
 //                    mVideoPixelAspectRatio,
