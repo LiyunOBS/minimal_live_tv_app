@@ -1,8 +1,9 @@
 package com.mini.livetvapp;
 
+import static com.mini.livetvapp.utils.PermissionUtils.PERMISSION_READ_TV_LISTINGS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,10 +18,13 @@ import java.util.List;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mini.livetvapp.utils.PermissionUtils;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "TAG for MainActivity";
     private static final boolean DEBUG = true;
+    private static final int PERMISSIONS_REQUEST_READ_TV_LISTINGS = 1;
     private Context mContext;
     private TvInputManager mTvInputManager;
 //    private List<TvInputInfo> mInputs = new ArrayList<>();
@@ -34,8 +38,28 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
         mTvInputManager = (TvInputManager) mContext.getSystemService(Context.TV_INPUT_SERVICE);
 
+        if (DEBUG) {
+            Log.d("TAG for READ_TV_LISTINGS", String.valueOf(
+                    checkSelfPermission("android.permission.READ_TV_LISTINGS") == PackageManager.PERMISSION_GRANTED ));
+            Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(PermissionUtils.hasAccessAllEpg(mContext)));
+        }
+
+        if (!PermissionUtils.hasAccessAllEpg(mContext)
+                && checkSelfPermission(PERMISSION_READ_TV_LISTINGS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[] {PERMISSION_READ_TV_LISTINGS},
+                    PERMISSIONS_REQUEST_READ_TV_LISTINGS);
+        }
+
         initInputList();
         handleListAdapter();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void initInputList() {

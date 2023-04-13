@@ -1,22 +1,18 @@
 package com.mini.livetvapp;
 
-import static com.mini.livetvapp.utils.PermissionUtils.hasAccessAllEpg;
-
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.tv.TvContract;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.mini.livetvapp.utils.ChannelInfo;
+import com.mini.livetvapp.utils.PermissionUtils;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.tvprovider.media.tv.Program;
@@ -50,16 +46,6 @@ public class ChannelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
-        if (DEBUG) {
-            Log.d("TAG for READ_TV_LISTINGS", String.valueOf(
-                    checkSelfPermission("android.permission.READ_TV_LISTINGS") == PackageManager.PERMISSION_GRANTED ));
-            Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(hasAccessAllEpg(mContext)));
-        }
-
-        ActivityCompat.requestPermissions(this, new String[] {
-                "android.permission.READ_TV_LISTINGS"} , 0);
-
         setContentView(R.layout.activity_channel);
 
         cr = mContext.getContentResolver();
@@ -69,30 +55,22 @@ public class ChannelActivity extends AppCompatActivity {
 
         if(DEBUG) {
             Log.d(TAG, "Searching channels from selected TvInputId " + inputId);
-            Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(hasAccessAllEpg(mContext)));
         }
 
-        initChannelList();
-        if (mChannels.size() > 0) {
+        if (PermissionUtils.hasReadTvListings(mContext)
+                || PermissionUtils.hasAccessAllEpg(mContext)) {
+            initChannelList();
             searchProgramListForChannels();
         }
         handleListAdapter();
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        Log.d(TAG, "onRequestPermissionsResult");
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (DEBUG) {
-            Log.d("TAG for READ_TV_LISTINGS", String.valueOf(
-                    checkSelfPermission("android.permission.READ_TV_LISTINGS") == PackageManager.PERMISSION_GRANTED));
-        }
-    }
-
     private void initChannelList() {
+
+        if(DEBUG) {
+            Log.d("TAG for ACCESS_ALL_EPG_DATA", String.valueOf(PermissionUtils.hasAccessAllEpg(mContext)));
+        }
 
         Uri channelsUri = TvContract.buildChannelsUriForInput(inputId);
 
